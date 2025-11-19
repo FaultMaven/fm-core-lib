@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fm-core-lib"
+version = "0.1.0"
+description = "FaultMaven Core Library - Shared models, LLM infrastructure, and preprocessing logic"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "FaultMaven", email = "dev@faultmaven.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+dependencies = [
+    # Core
+    "pydantic>=2.6,<2.10",
+    "pydantic-settings>=2.3.0",
+    "typing-extensions>=4.12.2",
+
+    # LLM Providers
+    "openai>=1.0.0",
+    "anthropic>=0.25.0",
+    "fireworks-ai>=0.12.1",
+    "tiktoken>=0.5.0",
+
+    # LangChain
+    "langchain>=0.1.15",
+    "langchain-community>=0.0.32",
+    "langchain-openai>=0.1.3",
+    "langchain-anthropic>=0.1.5",
+
+    # Data Processing
+    "numpy>=1.26.4,<2",
+    "pandas>=1.5.0",
+
+    # HTTP
+    "httpx>=0.28.1",
+    "requests>=2.31.0",
+
+    # Utilities
+    "tenacity>=8.3.0",
+    "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.7.0",
+    "ruff>=0.0.285",
+    "mypy>=1.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/FaultMaven/fm-core-lib"
+Repository = "https://github.com/FaultMaven/fm-core-lib"
+Issues = "https://github.com/FaultMaven/fm-core-lib/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=fm_core_lib --cov-report=term-missing"
