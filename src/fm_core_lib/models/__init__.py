@@ -1,55 +1,61 @@
-"""FaultMaven Core Models"""
+"""
+Shared data models for FaultMaven microservices.
+
+This package provides Pydantic models that are shared across all FaultMaven
+microservices to ensure consistency and avoid duplication.
+"""
 
 from fm_core_lib.models.case import (
+    # Core case model
     Case,
     CaseStatus,
-    CaseStatusTransition,
+    
+    # Investigation components
     InvestigationProgress,
-    InvestigationStrategy,
-    MessageType,
-    is_valid_transition,
-)
-from fm_core_lib.models.evidence import (
+    ConsultingData,
+    ProblemConfirmation,
+    ProblemVerification,
+    PathSelection,
+    WorkingConclusion,
+    RootCauseConclusion,
+    
+    # Evidence and data
     Evidence,
-    EvidenceType,
-    EvidenceCategory,
-)
-from fm_core_lib.models.common import (
+    UploadedFile,
+    
+    # Hypotheses
     Hypothesis,
-    HypothesisStatus,
-    ConfidenceLevel,
+    HypothesisEvidenceLink,
+    
+    # Solutions
     Solution,
-    SolutionStatus,
-)
-from fm_core_lib.models.api_models import (
-    CreateCaseRequest,
-    AddMessageRequest,
-    AddEvidenceRequest,
-    UpdateCaseStatusRequest,
+    
+    # Turn tracking
+    TurnProgress,
+    CaseStatusTransition,
+    
+    # Special states
+    DegradedMode,
+    DegradedModeType,
+    EscalationState,
+    
+    # Documentation
+    DocumentationData,
+    GeneratedDocument,
+    
+    # Supporting models
+    Change,
+    Correlation,
 )
 
 __all__ = [
-    # Case models
-    "Case",
-    "CaseStatus",
-    "CaseStatusTransition",
-    "InvestigationProgress",
-    "InvestigationStrategy",
-    "MessageType",
-    "is_valid_transition",
-    # Evidence models
-    "Evidence",
-    "EvidenceType",
-    "EvidenceCategory",
-    # Common models
-    "Hypothesis",
-    "HypothesisStatus",
-    "ConfidenceLevel",
-    "Solution",
-    "SolutionStatus",
-    # API models
-    "CreateCaseRequest",
-    "AddMessageRequest",
-    "AddEvidenceRequest",
-    "UpdateCaseStatusRequest",
+    "Case", "CaseStatus",
+    "InvestigationProgress", "ConsultingData", "ProblemConfirmation",
+    "ProblemVerification", "PathSelection", "WorkingConclusion",
+    "RootCauseConclusion", "Evidence", "UploadedFile",
+    "Hypothesis", "HypothesisEvidenceLink", "Solution",
+    "TurnProgress", "CaseStatusTransition",
+    "DegradedMode", "DegradedModeType", "EscalationState",
+    "DocumentationData", "GeneratedDocument",
+    "Change", "Correlation",
 ]
