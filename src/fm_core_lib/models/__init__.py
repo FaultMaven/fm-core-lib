@@ -9,30 +9,44 @@ from fm_core_lib.models.case import (
     # Core case model
     Case,
     CaseStatus,
+    CaseStatusTransition,
 
     # Investigation components
     InvestigationProgress,
+    InvestigationStage,
+    InvestigationPath,
     ConsultingData,
     ProblemConfirmation,
     ProblemVerification,
     PathSelection,
     WorkingConclusion,
     RootCauseConclusion,
+    TemporalState,
+    UrgencyLevel,
+    ConfidenceLevel,
 
     # Evidence and data
     Evidence,
     UploadedFile,
+    EvidenceCategory,
+    EvidenceSourceType,
+    EvidenceForm,
+    EvidenceStance,
 
     # Hypotheses
     Hypothesis,
     HypothesisEvidenceLink,
+    HypothesisCategory,
+    HypothesisStatus,
+    HypothesisGenerationMode,
 
     # Solutions
     Solution,
+    SolutionType,
 
     # Turn tracking
     TurnProgress,
-    CaseStatusTransition,
+    TurnOutcome,
 
     # Special states
     DegradedMode,
@@ -48,19 +62,28 @@ from fm_core_lib.models.case import (
     Correlation,
 )
 
-from fm_core_lib.models.evidence import (
-    EvidenceCategory,
-)
-
 __all__ = [
-    "Case", "CaseStatus",
-    "InvestigationProgress", "ConsultingData", "ProblemConfirmation",
-    "ProblemVerification", "PathSelection", "WorkingConclusion",
-    "RootCauseConclusion", "Evidence", "UploadedFile",
-    "Hypothesis", "HypothesisEvidenceLink", "Solution",
-    "TurnProgress", "CaseStatusTransition",
+    # Core case
+    "Case", "CaseStatus", "CaseStatusTransition",
+    # Investigation
+    "InvestigationProgress", "InvestigationStage", "InvestigationPath",
+    "ConsultingData", "ProblemConfirmation", "ProblemVerification",
+    "PathSelection", "WorkingConclusion", "RootCauseConclusion",
+    "TemporalState", "UrgencyLevel", "ConfidenceLevel",
+    # Evidence
+    "Evidence", "UploadedFile", "EvidenceCategory", "EvidenceSourceType",
+    "EvidenceForm", "EvidenceStance",
+    # Hypotheses
+    "Hypothesis", "HypothesisEvidenceLink", "HypothesisCategory",
+    "HypothesisStatus", "HypothesisGenerationMode",
+    # Solutions
+    "Solution", "SolutionType",
+    # Turn tracking
+    "TurnProgress", "TurnOutcome",
+    # Special states
     "DegradedMode", "DegradedModeType", "EscalationState",
+    # Documentation
     "DocumentationData", "GeneratedDocument",
+    # Supporting
     "Change", "Correlation",
-    "EvidenceCategory",
 ]
