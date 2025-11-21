@@ -9,7 +9,7 @@ from fm_core_lib.models.case import (
     # Core case model
     Case,
     CaseStatus,
-    
+
     # Investigation components
     InvestigationProgress,
     ConsultingData,
@@ -18,34 +18,38 @@ from fm_core_lib.models.case import (
     PathSelection,
     WorkingConclusion,
     RootCauseConclusion,
-    
+
     # Evidence and data
     Evidence,
     UploadedFile,
-    
+
     # Hypotheses
     Hypothesis,
     HypothesisEvidenceLink,
-    
+
     # Solutions
     Solution,
-    
+
     # Turn tracking
     TurnProgress,
     CaseStatusTransition,
-    
+
     # Special states
     DegradedMode,
     DegradedModeType,
     EscalationState,
-    
+
     # Documentation
     DocumentationData,
     GeneratedDocument,
-    
+
     # Supporting models
     Change,
     Correlation,
+)
+
+from fm_core_lib.models.evidence import (
+    EvidenceCategory,
 )
 
 __all__ = [
@@ -58,4 +62,5 @@ __all__ = [
     "DegradedMode", "DegradedModeType", "EscalationState",
     "DocumentationData", "GeneratedDocument",
     "Change", "Correlation",
+    "EvidenceCategory",
 ]
