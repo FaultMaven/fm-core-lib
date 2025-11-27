@@ -1,123 +1,191 @@
 """HTTP client for fm-case-service."""
 
-import httpx
-from typing import List, Optional
-from fm_core_lib.models import Case, Evidence, UploadedFile
+from typing import Callable, List, Optional
+
+from fm_core_lib.clients.base import BaseServiceClient
+from fm_core_lib.models import Case, Evidence
 
 
-class CaseServiceClient:
+class CaseServiceClient(BaseServiceClient):
     """Async HTTP client for communicating with fm-case-service.
-    
+
     This client provides a Pythonic interface to the fm-case-service REST API,
-    handling serialization/deserialization and error handling.
+    handling serialization/deserialization, error handling, and service authentication.
+
+    Usage:
+        # With ServiceTokenProvider (recommended)
+        from fm_core_lib.auth import ServiceTokenProvider
+
+        token_provider = ServiceTokenProvider(
+            auth_service_url="http://fm-auth-service:8000",
+            service_id="fm-agent-service",
+            audience=["fm-case-service"]
+        )
+
+        client = CaseServiceClient(
+            base_url="http://fm-case-service:8003",
+            token_provider=token_provider.get_token
+        )
+
+        # Use with user context
+        case = await client.get_case(case_id="case-123", user_id="user-456")
     """
-    
-    def __init__(self, base_url: str = "http://fm-case-service:8003"):
+
+    def __init__(
+        self,
+        base_url: str = "http://fm-case-service:8003",
+        token_provider: Optional[Callable[[], str]] = None,
+        timeout: float = 30.0,
+    ):
         """Initialize client.
-        
+
         Args:
             base_url: Base URL of fm-case-service (default: http://fm-case-service:8003)
+            token_provider: Async function that returns service JWT token
+                           (required for service-to-service authentication)
+            timeout: Request timeout in seconds (default: 30.0)
+
+        Raises:
+            ValueError: If token_provider is not provided
         """
-        self.base_url = base_url.rstrip("/")
-        self.client = httpx.AsyncClient(
-            timeout=30.0,
-            headers={"Content-Type": "application/json"}
-        )
+        if token_provider is None:
+            raise ValueError(
+                "token_provider is required for service-to-service authentication. "
+                "Pass ServiceTokenProvider.get_token or similar async callable."
+            )
+
+        super().__init__(base_url=base_url, token_provider=token_provider, timeout=timeout)
     
-    async def get_case(self, case_id: str) -> Case:
+    async def get_case(
+        self, case_id: str, user_id: str, correlation_id: Optional[str] = None
+    ) -> Case:
         """Get case by ID.
-        
+
         Args:
             case_id: Case identifier
-            
+            user_id: User ID for authentication context
+            correlation_id: Optional correlation ID for request tracing
+
         Returns:
             Case object
-            
+
         Raises:
             httpx.HTTPStatusError: If case not found or other HTTP error
         """
-        response = await self.client.get(f"{self.base_url}/api/v1/cases/{case_id}")
-        response.raise_for_status()
-        return Case(**response.json())
+        async with self._get_client() as client:
+            response = await client.get(
+                f"{self.base_url}/api/v1/cases/{case_id}",
+                headers=await self._headers_async(user_id=user_id, correlation_id=correlation_id),
+            )
+            response.raise_for_status()
+            return Case(**response.json())
     
-    async def create_case(self, case: Case) -> Case:
+    async def create_case(
+        self, case: Case, user_id: str, correlation_id: Optional[str] = None
+    ) -> Case:
         """Create new case.
-        
+
         Args:
             case: Case object to create
-            
+            user_id: User ID for authentication context
+            correlation_id: Optional correlation ID for request tracing
+
         Returns:
             Created case with generated ID
         """
-        response = await self.client.post(
-            f"{self.base_url}/api/v1/cases",
-            json=case.model_dump(exclude_unset=True)
-        )
-        response.raise_for_status()
-        return Case(**response.json())
+        async with self._get_client() as client:
+            response = await client.post(
+                f"{self.base_url}/api/v1/cases",
+                json=case.model_dump(exclude_unset=True),
+                headers=await self._headers_async(user_id=user_id, correlation_id=correlation_id),
+            )
+            response.raise_for_status()
+            return Case(**response.json())
     
-    async def update_case(self, case_id: str, case: Case) -> Case:
+    async def update_case(
+        self, case_id: str, case: Case, user_id: str, correlation_id: Optional[str] = None
+    ) -> Case:
         """Update existing case.
-        
+
         Args:
             case_id: Case identifier
             case: Updated case object
-            
+            user_id: User ID for authentication context
+            correlation_id: Optional correlation ID for request tracing
+
         Returns:
             Updated case
         """
-        response = await self.client.put(
-            f"{self.base_url}/api/v1/cases/{case_id}",
-            json=case.model_dump()
-        )
-        response.raise_for_status()
-        return Case(**response.json())
+        async with self._get_client() as client:
+            response = await client.put(
+                f"{self.base_url}/api/v1/cases/{case_id}",
+                json=case.model_dump(),
+                headers=await self._headers_async(user_id=user_id, correlation_id=correlation_id),
+            )
+            response.raise_for_status()
+            return Case(**response.json())
     
-    async def delete_case(self, case_id: str) -> bool:
+    async def delete_case(
+        self, case_id: str, user_id: str, correlation_id: Optional[str] = None
+    ) -> bool:
         """Delete case.
-        
+
         Args:
             case_id: Case identifier
-            
+            user_id: User ID for authentication context
+            correlation_id: Optional correlation ID for request tracing
+
         Returns:
             True if deleted successfully
         """
-        response = await self.client.delete(f"{self.base_url}/api/v1/cases/{case_id}")
-        response.raise_for_status()
-        return True
+        async with self._get_client() as client:
+            response = await client.delete(
+                f"{self.base_url}/api/v1/cases/{case_id}",
+                headers=await self._headers_async(user_id=user_id, correlation_id=correlation_id),
+            )
+            response.raise_for_status()
+            return True
     
-    async def add_evidence(self, case_id: str, evidence: Evidence) -> Evidence:
+    async def add_evidence(
+        self, case_id: str, evidence: Evidence, user_id: str, correlation_id: Optional[str] = None
+    ) -> Evidence:
         """Add evidence to case.
-        
+
         Args:
             case_id: Case identifier
             evidence: Evidence object to add
-            
+            user_id: User ID for authentication context
+            correlation_id: Optional correlation ID for request tracing
+
         Returns:
             Added evidence with generated ID
         """
-        response = await self.client.post(
-            f"{self.base_url}/api/v1/cases/{case_id}/evidence",
-            json=evidence.model_dump(exclude_unset=True)
-        )
-        response.raise_for_status()
-        return Evidence(**response.json())
+        async with self._get_client() as client:
+            response = await client.post(
+                f"{self.base_url}/api/v1/cases/{case_id}/evidence",
+                json=evidence.model_dump(exclude_unset=True),
+                headers=await self._headers_async(user_id=user_id, correlation_id=correlation_id),
+            )
+            response.raise_for_status()
+            return Evidence(**response.json())
     
-    async def get_cases_by_session(self, session_id: str) -> List[Case]:
+    async def get_cases_by_session(
+        self, session_id: str, user_id: str, correlation_id: Optional[str] = None
+    ) -> List[Case]:
         """Get all cases for a session.
-        
+
         Args:
             session_id: Session identifier
-            
+            user_id: User ID for authentication context
+            correlation_id: Optional correlation ID for request tracing
+
         Returns:
             List of cases for the session
         """
-        response = await self.client.get(
-            f"{self.base_url}/api/v1/cases/sessions/{session_id}/cases"
-        )
-        response.raise_for_status()
-        return [Case(**case) for case in response.json()]
-    
-    async def close(self):
-        """Close the HTTP client."""
-        await self.client.aclose()
+        async with self._get_client() as client:
+            response = await client.get(
+                f"{self.base_url}/api/v1/cases/sessions/{session_id}/cases",
+                headers=await self._headers_async(user_id=user_id, correlation_id=correlation_id),
+            )
+            response.raise_for_status()
+            return [Case(**case) for case in response.json()]
