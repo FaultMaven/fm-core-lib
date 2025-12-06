@@ -1,6 +1,11 @@
 # fm-core-lib
 
+> **Part of [FaultMaven](https://github.com/FaultMaven/faultmaven)** —
+> The AI-Powered Troubleshooting Copilot
+
 FaultMaven Core Library - Shared models, LLM infrastructure, and preprocessing logic for FaultMaven microservices.
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ## Overview
 
@@ -67,6 +72,22 @@ This library follows the "Open Core" strategy - a single codebase that can be co
 - `PROFILE=public`: Community edition features
 - `PROFILE=enterprise`: Enterprise edition with additional capabilities
 
+## Contributing
+
+See our [Contributing Guide](https://github.com/FaultMaven/.github/blob/main/CONTRIBUTING.md) for detailed guidelines.
+
+## Support
+
+- **Discussions:** [GitHub Discussions](https://github.com/FaultMaven/faultmaven/discussions)
+- **Issues:** [GitHub Issues](https://github.com/FaultMaven/fm-core-lib/issues)
+
+## Related Projects
+
+- **[faultmaven](https://github.com/FaultMaven/faultmaven)** - Main repository and documentation
+- **[faultmaven-deploy](https://github.com/FaultMaven/faultmaven-deploy)** - Deployment configurations
+- **[fm-agent-service](https://github.com/FaultMaven/fm-agent-service)** - AI agent service
+- **[fm-knowledge-service](https://github.com/FaultMaven/fm-knowledge-service)** - Knowledge base service
+
 ## License
 
-MIT
+Apache 2.0 - See [LICENSE](LICENSE) for details.
