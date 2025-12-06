@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fm-core-lib"
-version = "0.2.0"
+version = "0.2.1"
 description = "FaultMaven Core Library - Shared models, LLM infrastructure, and preprocessing logic"
 readme = "README.md"
 requires-python = ">=3.11"
