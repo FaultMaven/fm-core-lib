@@ -1,20 +1,12 @@
-"""Service-to-service authentication library for FaultMaven microservices.
+"""Authentication utilities for FaultMaven microservices.
 
-This module provides JWT-based authentication for FaultMaven microservices.
+This module provides request context extraction from API Gateway headers.
+Services trust X-User-* headers from the gateway without JWT validation.
 """
 
-from fm_core_lib.auth.service_auth import (
-    ServiceIdentity,
-    RequestContext,
-    ServiceAuthMiddleware,
-    get_request_context,
-)
-from fm_core_lib.auth.token_provider import ServiceTokenProvider
+from fm_core_lib.auth.request_context import RequestContext, get_request_context
 
 __all__ = [
-    "ServiceIdentity",
     "RequestContext",
-    "ServiceAuthMiddleware",
-    "ServiceTokenProvider",
     "get_request_context",
 ]
