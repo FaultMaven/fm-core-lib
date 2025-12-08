@@ -5,16 +5,13 @@ Shared models, LLM infrastructure, and preprocessing logic for FaultMaven micros
 
 __version__ = "0.3.0"
 
-# Export shared models
+# Export shared models first (no dependencies)
 from fm_core_lib.models import (
     Case, CaseStatus, Evidence, Hypothesis, Solution,
     UploadedFile, InvestigationProgress, ConsultingData
 )
 
-# Export HTTP clients
-from fm_core_lib.clients import CaseServiceClient
-
-# Export service discovery
+# Export service discovery (no model dependencies)
 from fm_core_lib.discovery import (
     ServiceRegistry,
     DeploymentMode,
@@ -22,11 +19,20 @@ from fm_core_lib.discovery import (
     reset_service_registry,
 )
 
+# Lazy import for clients to avoid circular dependency
+# Clients depend on models, so import them last
+def __getattr__(name):
+    """Lazy import for CaseServiceClient to avoid circular import."""
+    if name == "CaseServiceClient":
+        from fm_core_lib.clients import CaseServiceClient
+        return CaseServiceClient
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
+
 __all__ = [
     # Models
     "Case", "CaseStatus", "Evidence", "Hypothesis", "Solution",
     "UploadedFile", "InvestigationProgress", "ConsultingData",
-    # Clients
+    # Clients (lazy loaded)
     "CaseServiceClient",
     # Service Discovery
     "ServiceRegistry",
