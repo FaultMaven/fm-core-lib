@@ -51,6 +51,9 @@ dependencies = [
     # Utilities
     "tenacity>=8.3.0",
     "python-dotenv>=1.0.1",
+
+    # Redis (for Sentinel support in shared infrastructure)
+    "redis>=5.0.0",
 ]
 
 [project.optional-dependencies]
