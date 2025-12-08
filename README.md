@@ -13,6 +13,7 @@ This library provides the foundational components shared across all FaultMaven m
 
 - **Models**: Case, Evidence, Hypothesis, InvestigationProgress, and API models
 - **LLM Infrastructure**: Multi-provider LLM routing with failover (OpenAI, Anthropic, Fireworks AI)
+- **Service Discovery**: Deployment-neutral service URL resolution (Docker/Kubernetes/Local)
 - **Preprocessing**: Data sanitization and preprocessing logic
 
 ## Installation
@@ -48,6 +49,48 @@ response = await router.generate(
     temperature=0.7
 )
 ```
+
+### Service Discovery
+
+```python
+from fm_core_lib.discovery import get_service_registry
+
+# Get service registry singleton
+registry = get_service_registry()
+
+# Get service URL (automatically resolves based on DEPLOYMENT_MODE)
+auth_url = registry.get_url("auth")
+# Returns:
+#   Docker:     http://fm-auth-service:8000
+#   Kubernetes: http://fm-auth-service.faultmaven.svc.cluster.local:8000
+#   Local:      http://localhost:8000
+```
+
+**Configuration:**
+
+Set the deployment mode via environment variables:
+
+```bash
+# Docker Compose (default)
+DEPLOYMENT_MODE=docker
+
+# Kubernetes
+DEPLOYMENT_MODE=kubernetes
+K8S_NAMESPACE=faultmaven
+
+# Local development
+DEPLOYMENT_MODE=local
+```
+
+**Supported Services:**
+
+- `auth` - fm-auth-service (port 8000)
+- `agent` - fm-agent-service (port 8001)
+- `session` - fm-session-service (port 8002)
+- `knowledge` - fm-knowledge-service (port 8003)
+- `evidence` - fm-evidence-service (port 8004)
+- `case` - fm-case-service (port 8005)
+- `gateway` - fm-api-gateway (port 8090)
 
 ## Development
 
