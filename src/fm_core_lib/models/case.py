@@ -2990,6 +2990,25 @@ class Case(BaseModel):
     )
 
     # ============================================================
+    # Extension Data
+    # ============================================================
+    metadata: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="""
+        Flexible key-value storage for extension data not covered by typed fields.
+
+        Common uses:
+        - severity: str - Legacy severity level (low/medium/high/critical)
+        - category: str - Legacy category (performance/error/config/etc)
+        - close_reason: str - Reason for closure
+        - resolution_notes: str - Notes about resolution
+        - custom application-specific data
+
+        This field is persisted to the database metadata JSONB column.
+        """
+    )
+
+    # ============================================================
     # Computed Properties
     # ============================================================
     @property
