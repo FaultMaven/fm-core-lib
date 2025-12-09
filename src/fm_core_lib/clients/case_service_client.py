@@ -71,7 +71,7 @@ class CaseServiceClient(BaseServiceClient):
         async with self._get_client() as client:
             response = await client.post(
                 f"{self.base_url}/api/v1/cases",
-                json=case.model_dump(exclude_unset=True),
+                json=case.model_dump(mode='json', exclude_unset=True),
                 headers=self._headers(user_id=user_id, correlation_id=correlation_id),
             )
             response.raise_for_status()
@@ -94,7 +94,7 @@ class CaseServiceClient(BaseServiceClient):
         async with self._get_client() as client:
             response = await client.put(
                 f"{self.base_url}/api/v1/cases/{case_id}",
-                json=case.model_dump(),
+                json=case.model_dump(mode='json'),
                 headers=self._headers(user_id=user_id, correlation_id=correlation_id),
             )
             response.raise_for_status()
